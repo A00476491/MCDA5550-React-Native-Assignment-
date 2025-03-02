@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { StyleSheet, Text, TextInput, View } from "react-native";
+import { StyleSheet, Text, TextInput, View, Alert } from "react-native";
 import { Weather } from "../components/Weather";
 import { fetchWeatherData } from "../utils/api";
 import { getDatabaseInstance } from "../utils/database";
@@ -80,7 +80,8 @@ export default function LocationSearch() {
     try {
       const result = await db.getAllAsync<RowNumber>(`SELECT COUNT(*) as rowNumber FROM Cities`);
       // console.log(result[0]['rowNumber']);
-      if (result[0]['rowNumber'] >= 3) {
+      if (result[0]['rowNumber'] >= 4) {
+        Alert.alert("Limit Reached", "Exceed limit of saved cities");
         console.log("Exceed limit of saved cities");
         return;
       }
@@ -97,6 +98,7 @@ export default function LocationSearch() {
           cityWeather.weatherCondition,
         ]
       );
+      Alert.alert("Weather data saved successfully!");
       console.log("Weather data saved successfully!");
       setCityError(null);
     } catch (error) {
